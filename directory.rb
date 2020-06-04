@@ -29,8 +29,10 @@ def process(selection)
       show_students
     when "3"
       save_students
+      puts "File saved"
     when "4"
       load_students
+      puts "File loaded"
     when "9"
       exit
     else
@@ -42,10 +44,13 @@ def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
   name = STDIN.gets.chomp
+  puts "Please enter cohort"
+  cohort = STDIN.gets.chomp
   while !name.empty? do
     student_list(name, cohort)
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
+    cohort = STDIN.gets.chomp
   end
 end
 
@@ -76,7 +81,9 @@ def print_footer
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  puts "Enter file name"
+  filename = gets.chomp + ".csv"
+  file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
@@ -84,15 +91,19 @@ def save_students
   end
   file.close  
 end
+#modified file name for saving
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
+def load_students#(filename = "students.csv")
+  puts "Enter file name"
+  loadfile = gets.chomp + ".csv"
+  file = File.open(loadfile, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     student_list(name, cohort)
   end
   file.close
 end
+#modified file name for loading
 
 def try_load_students
   filename = ARGV.first #first argument from the command line
