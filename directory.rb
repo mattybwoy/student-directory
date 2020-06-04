@@ -1,3 +1,9 @@
+require "csv"
+
+def csv
+  csv = CSV.open("students.csv", "a+")
+end
+
 @students = [] #empty array accessible to all methods
 
 def print_menu
@@ -37,11 +43,16 @@ def input_students
   puts "To finish, just hit return twice"
   name = STDIN.gets.chomp
   while !name.empty? do
-    @students << {name: name, cohort: :november}
+    student_list(name, cohort)
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end
 end
+
+def student_list(name, cohort) 
+  @students << {name: name, cohort: cohort.to_sym}
+end
+#DRY repeated code put into method
 
 def show_students
   print_header
@@ -78,7 +89,7 @@ def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+    student_list(name, cohort)
   end
   file.close
 end
@@ -90,11 +101,12 @@ def try_load_students
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else
-    puts "Sorry #{filename} doesn't exist."
+    puts "sorry that file doesn't exist"
     exit
   end
 end
 # nothing happens until we call the methods
+csv
 try_load_students
 interactive_menu
 
