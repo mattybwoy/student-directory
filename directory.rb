@@ -77,13 +77,14 @@ end
 def save_students
   puts "Enter file name"
   filename = gets.chomp + ".csv"
-  file = File.open(filename, "w")
+  file = File.open(filename, "w") do |file|
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
-  file.close  
+  #file.close  
+end
 end
 #modified file name for saving
 def user_load
