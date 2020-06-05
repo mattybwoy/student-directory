@@ -82,11 +82,11 @@ def save_students
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
-  end
-  #file.close  
+  end 
 end
 end
-#modified file name for saving
+#refactored to close file automatically after save
+
 def user_load
   puts "Enter file name"
   load_students(gets.chomp)
@@ -94,14 +94,14 @@ end
 #loading specific file 
 
 def load_students(filename)
-  file = File.open(filename, "r")
+  File.open(filename, "r") do |file|
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     student_list(name, cohort)
   end
-  file.close
 end
-#modified file name for loading
+end
+#refactored to close file automatically after load
 
 def try_load_students
   ARGV.first.nil? ? filename = "students.csv" : filename = ARGV.first
