@@ -1,16 +1,10 @@
-require "csv"
-
-def csv
-  csv = CSV.open("students.csv", "a+")
-end
-
 @students = [] #empty array accessible to all methods
 
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save file"
+  puts "4. Load file"
   puts "9. Exit"
 end
 
@@ -31,7 +25,7 @@ def process(selection)
       save_students
       puts "File saved"
     when "4"
-      load_students
+      user_load
       puts "File loaded"
     when "9"
       exit
@@ -92,11 +86,14 @@ def save_students
   file.close  
 end
 #modified file name for saving
-
-def load_students#(filename = "students.csv")
+def user_load
   puts "Enter file name"
-  loadfile = gets.chomp + ".csv"
-  file = File.open(loadfile, "r")
+  load_students(gets.chomp)
+end
+#loading specific file 
+
+def load_students(filename)
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     student_list(name, cohort)
@@ -106,8 +103,8 @@ end
 #modified file name for loading
 
 def try_load_students
-  filename = ARGV.first #first argument from the command line
-  return if filename.nil? #get out if filename doesn't exist
+  ARGV.first.nil? ? filename = "students.csv" : filename = ARGV.first
+  #deafult file loaded if no file name given
   if File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
@@ -117,7 +114,7 @@ def try_load_students
   end
 end
 # nothing happens until we call the methods
-csv
+
 try_load_students
 interactive_menu
 
