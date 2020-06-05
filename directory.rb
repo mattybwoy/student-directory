@@ -1,3 +1,4 @@
+require 'csv'
 @students = [] #empty array accessible to all methods
 
 def print_menu
@@ -77,15 +78,13 @@ end
 def save_students
   puts "Enter file name"
   filename = gets.chomp + ".csv"
-  file = File.open(filename, "w") do |file|
+  CSV.open(filename,"w") do |csv|
   @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+    csv << [student[:name], student[:cohort]]
   end 
 end
 end
-#refactored to close file automatically after save
+#use csv library to save file
 
 def user_load
   puts "Enter file name"
@@ -94,14 +93,12 @@ end
 #loading specific file 
 
 def load_students(filename)
-  File.open(filename, "r") do |file|
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
+    CSV.foreach(filename) do |row|
+      name, cohort = row
     student_list(name, cohort)
   end
 end
-end
-#refactored to close file automatically after load
+#use csv library to load file
 
 def try_load_students
   ARGV.first.nil? ? filename = "students.csv" : filename = ARGV.first
@@ -115,7 +112,6 @@ def try_load_students
   end
 end
 # nothing happens until we call the methods
-
 try_load_students
 interactive_menu
 
